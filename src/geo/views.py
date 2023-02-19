@@ -12,7 +12,7 @@ from app.settings import CACHE_WEATHER
 from geo.serializers import CountrySerializer, CitySerializer
 from geo.services.city import CityService
 from geo.services.country import CountryService
-from geo.services.shemas import CountryCityDTO
+from geo.services.schemas import CountryCityDTO
 from geo.services.weather import WeatherService
 
 

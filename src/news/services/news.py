@@ -1,7 +1,7 @@
 from typing import Optional
 
 from news.clients.news import NewsClient
-from news.clients.shemas import NewsItemDTO
+from news.clients.schemas import NewsItemDTO
 from news.models import News
 
 

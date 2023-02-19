@@ -9,7 +9,7 @@ import httpx
 from app.settings import REQUESTS_TIMEOUT, API_KEY_NEWSAPI
 from base.clients.base import BaseClient
 
-from news.clients.shemas import NewsItemDTO
+from news.clients.schemas import NewsItemDTO
 
 
 class NewsClient(BaseClient):

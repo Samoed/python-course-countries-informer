@@ -1,6 +1,6 @@
 from typing import Optional
 
-from geo.clients.shemas import CountryDTO
+from geo.clients.schemas import CountryDTO
 from geo.clients.weather import WeatherClient
 from geo.models import Country
 
