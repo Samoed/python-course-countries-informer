@@ -1,6 +1,5 @@
 """Представления Django"""
 import re
-from typing import Any
 
 from django.core.cache import caches
 from django.http import JsonResponse
@@ -12,6 +11,7 @@ from app.settings import CACHE_WEATHER
 from geo.serializers import CountrySerializer, CitySerializer
 from geo.services.city import CityService
 from geo.services.country import CountryService
+from geo.services.currency import CurrencyService
 from geo.services.schemas import CountryCityDTO
 from geo.services.weather import WeatherService
 
@@ -142,5 +142,15 @@ def get_weather(request: Request, alpha2code: str, city: str) -> JsonResponse:
 
 
 @api_view(["GET"])
-def get_currency(*args: Any, **kwargs: Any) -> None:
-    pass
+def get_currency(request: Request, currency_base: str) -> JsonResponse:
+    cache_key = f"currency_base_{currency_base}"
+    data = caches[CACHE_WEATHER].get(cache_key)
+    if not data:
+        if data := CurrencyService().get_currency(currency_base):
+            caches[CACHE_WEATHER].set(cache_key, data)
+
+    if data:
+        return JsonResponse(data)
+
+    raise NotFound
+

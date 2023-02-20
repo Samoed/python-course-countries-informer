@@ -4,11 +4,14 @@ Service to get up-to-date information about countries and cities.
 
 ## Requirements:
 
-
+- docker
+- git
 
 ## Installation
 
-
+```shell
+git clone https://github.com/Samoed/python-course-countries-informer
+```
 
 ## Usage
 
