@@ -43,7 +43,6 @@ class CountryService:
         """
         Получение списка ISO Alpha2 кодов стран.
 
-        :param name: Название страны
         :return:
         """
 

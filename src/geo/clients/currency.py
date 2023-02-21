@@ -4,6 +4,7 @@
 
 from app.settings import API_KEY_APILAYER
 from base.clients.base import BaseClient
+from geo.clients.schemas import CurrencyRatesDTO
 
 
 class CurrencyClient(BaseClient):
@@ -16,11 +17,18 @@ class CurrencyClient(BaseClient):
     def get_base_url(self) -> str:
         return "https://api.apilayer.com/fixer/latest"
 
-    def get_rates(self, base: str = "rub") -> dict | None:
+    def get_rates(self, base: str = "rub") -> CurrencyRatesDTO | None:
         """
         Получение данных о курсах валют.
         :param base: Базовая валюта
         :return:
         """
         self.params["base"] = base
-        return self._request(self.get_base_url())
+        data = self._request(self.get_base_url())
+        if not data:
+            return None
+        return CurrencyRatesDTO(
+            base=data["base"],
+            date=data["date"],
+            rates=data["rates"]
+        )

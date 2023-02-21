@@ -8,7 +8,7 @@ from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.request import Request
 
 from app.settings import CACHE_WEATHER
-from geo.serializers import CountrySerializer, CitySerializer
+from geo.serializers import CountrySerializer, CitySerializer, CurrencyRatesSerializer, WeatherSerializer
 from geo.services.city import CityService
 from geo.services.country import CountryService
 from geo.services.currency import CurrencyService
@@ -136,7 +136,9 @@ def get_weather(request: Request, alpha2code: str, city: str) -> JsonResponse:
             caches[CACHE_WEATHER].set(cache_key, data)
 
     if data:
-        return JsonResponse(data)
+        serializer = WeatherSerializer(data, many=True)
+
+        return JsonResponse(serializer.data, safe=False)
 
     raise NotFound
 
@@ -150,7 +152,9 @@ def get_currency(request: Request, currency_base: str) -> JsonResponse:
             caches[CACHE_WEATHER].set(cache_key, data)
 
     if data:
-        return JsonResponse(data)
+        serializer = CurrencyRatesSerializer(data, many=True)
+
+        return JsonResponse(serializer.data, safe=False)
 
     raise NotFound
 

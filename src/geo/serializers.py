@@ -56,7 +56,7 @@ class WeatherSerializer(serializers.ModelSerializer):
         model = Weather
         fields = [
             "id",
-            "temp"
+            "temp",
             "pressure",
             "humidity",
             "wind_speed",

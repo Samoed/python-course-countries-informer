@@ -1,8 +1,10 @@
 from typing import Optional
 
-from geo.clients.schemas import CountryDTO
+from django.db.models import Q
+
+from geo.clients.schemas import CountryDTO, WeatherInfoDTO
 from geo.clients.weather import WeatherClient
-from geo.models import Country
+from geo.models import City, Country, Weather
 
 
 class WeatherService:
@@ -19,33 +21,36 @@ class WeatherService:
         :return:
         """
 
-        if data := WeatherClient().get_weather(f"{city},{alpha2code}"):
-            return data
+        weather = Weather.objects.filter(
+            Q(city__name__contains=city) | Q(city__country__alpha2code__contains=alpha2code)
+        )
+        if not weather:
+            if weather_data := WeatherClient().get_weather(f"{city},{alpha2code}"):
+                weather = Weather.objects.create(
+                    self.build_model(weather_data, city, alpha2code)
+                )
 
-        return None
+        return weather
 
-    def build_model(self, country: CountryDTO) -> Country:
+    def build_model(self, weather: WeatherInfoDTO, city_name: str, alpha2code: str) -> Weather:
         """
         Формирование объекта модели страны.
 
         :param CountryDTO country: Данные о стране.
         :return:
         """
-
-        return Country(
-            alpha3code=country.alpha3code,
-            name=country.name,
-            alpha2code=country.alpha2code,
-            capital=country.capital,
-            region=country.region,
-            subregion=country.subregion,
-            population=country.population,
-            latitude=country.latitude,
-            longitude=country.longitude,
-            demonym=country.demonym,
-            area=country.area,
-            numeric_code=country.numeric_code,
-            flag=country.flag,
-            currencies=[currency.code for currency in country.currencies],
-            languages=[language.name for language in country.languages],
+        print(city_name, alpha2code)
+        city = City.objects.filter(
+            Q(name__contains=city_name) | Q(country__alpha2code__contains=alpha2code)
+        )
+        return Weather(
+            city=city,
+            temp=weather.temp,
+            pressure=weather.pressure,
+            humidity=weather.humidity,
+            wind_speed=weather.wind_speed,
+            description=weather.description,
+            visibility=weather.visibility,
+            dt=weather.dt,
+            timezone=weather.timezone,
         )

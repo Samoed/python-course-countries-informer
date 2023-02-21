@@ -1,5 +1,8 @@
 from typing import Optional
 
+from django.db.models import Q
+
+from geo.models import Country
 from news.clients.news import NewsClient
 from news.clients.schemas import NewsItemDTO
 from news.models import News
@@ -10,15 +13,26 @@ class NewsService:
     Сервис для работы с данными о новостях.
     """
 
-    def get_news(self, country_code: str) -> Optional[list[NewsItemDTO]]:
+    def get_news(self, country_code: str) -> Optional[list[News]]:
         """
         Получение актуальных новостей по коду страны.
 
         :param str country_code: ISO Alpha2 код страны
         :return:
         """
-
-        return NewsClient().get_news(country_code)
+        news = News.objects.filter(
+            Q(country__alpha2code__contains=country_code)
+        )
+        if not news:
+            if news_data := NewsClient().get_news(country_code):
+                country = Country.objects.filter(
+                    Q(alpha2code__contains=country_code)
+                )
+                news = News.objects.create(
+                    [self.build_model(news_item, country.pk) for news_item in news_data],
+                    batch_size=1000
+                )
+        return news
 
     def save_news(self, country_pk: int, news: list[NewsItemDTO]) -> None:
         """

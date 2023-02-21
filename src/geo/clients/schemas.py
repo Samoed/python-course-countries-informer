@@ -1,11 +1,12 @@
 """
 Описание моделей данных (DTO).
 """
+from datetime import datetime
 from typing import Optional
 
 from pydantic import Field, BaseModel
 
-from base.clients.shemas import HashableBaseModel
+from base.clients.schemas import HashableBaseModel
 
 
 class LocationDTO(HashableBaseModel):
@@ -186,6 +187,9 @@ class WeatherInfoDTO(BaseModel):
     humidity: int
     wind_speed: float
     description: str
+    visibility: int
+    dt: datetime
+    timezone: int
 
 
 class LocationInfoDTO(BaseModel):
