@@ -14,6 +14,7 @@ class BaseClient(ABC):
     """
     Базовый класс, реализующий интерфейс для клиентов.
     """
+
     headers: dict[str, Any] = {}
     params: dict[str, Any] = {}
 

@@ -26,13 +26,17 @@ class WeatherClient(BaseClient):
         data = self._request(
             f"{self.get_base_url()}?units=metric&q={location}&appid={API_KEY_OPENWEATHER}"
         )
-        return WeatherInfoDTO(
-            temp=data["main"]["temp"],
-            pressure=data["main"]["pressure"],
-            humidity=data["main"]["humidity"],
-            wind_speed=data["wind"]["speed"],
-            description=data["weather"][0]["description"],
-            visibility=data["visibility"],
-            dt=data["dt"],
-            timezone=data["timezone"] // 3600,
-        ) if data else None
+        return (
+            WeatherInfoDTO(
+                temp=data["main"]["temp"],
+                pressure=data["main"]["pressure"],
+                humidity=data["main"]["humidity"],
+                wind_speed=data["wind"]["speed"],
+                description=data["weather"][0]["description"],
+                visibility=data["visibility"],
+                dt=data["dt"],
+                timezone=data["timezone"] // 3600,
+            )
+            if data
+            else None
+        )

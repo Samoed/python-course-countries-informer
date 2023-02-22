@@ -23,6 +23,4 @@ class NewsSerializer(serializers.ModelSerializer):
             "published_at",
             "country",
         ]
-        ordering = (
-            "published_at",
-        )
+        ordering = ("published_at",)

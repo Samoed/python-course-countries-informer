@@ -6,14 +6,23 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.request import Request
+from rest_framework.settings import api_settings
 
 from app.settings import CACHE_WEATHER
-from geo.serializers import CountrySerializer, CitySerializer, CurrencyRatesSerializer, WeatherSerializer
+from geo.serializers import (
+    CountrySerializer,
+    CitySerializer,
+    CurrencyRatesSerializer,
+    WeatherSerializer,
+)
 from geo.services.city import CityService
 from geo.services.country import CountryService
 from geo.services.currency import CurrencyService
 from geo.services.schemas import CountryCityDTO
 from geo.services.weather import WeatherService
+
+pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
+paginator = pagination_class()
 
 
 @api_view(["GET"])
@@ -30,9 +39,11 @@ def get_city(request: Request, name: str) -> JsonResponse:
     """
 
     if cities := CityService().get_cities(name):
-        serializer = CitySerializer(cities, many=True)
+        page = paginator.paginate_queryset(cities, request)
 
-        return JsonResponse(serializer.data, safe=False)
+        serializer = CitySerializer(page, many=True)
+
+        return paginator.get_paginated_response(serializer.data)
 
     raise NotFound
 
@@ -64,9 +75,11 @@ def get_cities(request: Request) -> JsonResponse:
         )
 
     if cities := CityService().get_cities_by_codes(codes_set):
-        serializer = CitySerializer(cities, many=True)
+        page = paginator.paginate_queryset(cities, request)
 
-        return JsonResponse(serializer.data, safe=False)
+        serializer = CitySerializer(page, many=True)
+
+        return paginator.get_paginated_response(serializer.data)
 
     return JsonResponse([], safe=False)
 
@@ -85,9 +98,10 @@ def get_country(request: Request, name: str) -> JsonResponse:
     """
 
     if countries := CountryService().get_countries(name):
-        serializer = CountrySerializer(countries, many=True)
+        page = paginator.paginate_queryset(countries, request)
+        serializer = CountrySerializer(page, many=True)
 
-        return JsonResponse(serializer.data, safe=False)
+        return paginator.get_paginated_response(serializer.data)
 
     raise NotFound
 
@@ -111,9 +125,10 @@ def get_countries(request: Request) -> JsonResponse:
         )
 
     if countries := CountryService().get_countries_by_codes(codes_set):
-        serializer = CountrySerializer(countries, many=True)
+        page = paginator.paginate_queryset(countries, request)
+        serializer = CountrySerializer(page, many=True)
 
-        return JsonResponse(serializer.data, safe=False)
+        return paginator.get_paginated_response(serializer.data)
 
     return JsonResponse([], safe=False)
 
@@ -158,9 +173,9 @@ def get_currency(request: Request, currency_base: str) -> JsonResponse:
             caches[CACHE_WEATHER].set(cache_key, data)
 
     if data:
-        serializer = CurrencyRatesSerializer(data, many=True)
+        page = paginator.paginate_queryset(data, request)
+        serializer = CurrencyRatesSerializer(page, many=True)
 
-        return JsonResponse(serializer.data, safe=False)
+        return paginator.get_paginated_response(serializer.data)
 
     raise NotFound
-

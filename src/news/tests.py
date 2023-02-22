@@ -53,15 +53,15 @@ class NewsTestCase(APITestCase):
             published_at=datetime.now().astimezone(),
         )
 
-    def test_get_news(self):
+    def test_get_news(self) -> None:
         """
         Тест получения новостей.
         :return:
         """
         response = self.client.get(reverse("news", kwargs={"alpha2code": "te"}))
-        data = response.json()
+        data = response.json()["results"]
         item = data[0]
-        self.assertEqual(len(data), 2)
+        self.assertEqual(len(data), 1)
         self.assertEqual(item["source"], self.news.source)
         self.assertEqual(item["author"], self.news.author)
         self.assertEqual(item["title"], self.news.title)

@@ -2,9 +2,10 @@ from typing import Optional
 
 from django.db.models import Q
 
-from geo.clients.schemas import CountryDTO, WeatherInfoDTO
+from geo.clients.schemas import WeatherInfoDTO
 from geo.clients.weather import WeatherClient
-from geo.models import City, Country, Weather
+from geo.models import Weather
+from geo.services.city import CityService
 
 
 class WeatherService:
@@ -12,7 +13,7 @@ class WeatherService:
     Сервис для работы с данными о погоде.
     """
 
-    def get_weather(self, alpha2code: str, city: str) -> Optional[dict]:
+    def get_weather(self, alpha2code: str, city: str) -> Optional[Weather]:
         """
         Получение погоды по стране и городу.
 
@@ -22,17 +23,16 @@ class WeatherService:
         """
 
         weather = Weather.objects.filter(
-            Q(city__name__contains=city) | Q(city__country__alpha2code__contains=alpha2code)
+            Q(city__name__contains=city)
+            | Q(city__country__alpha2code__contains=alpha2code)
         )
         if not weather:
             if weather_data := WeatherClient().get_weather(f"{city},{alpha2code}"):
-                weather = Weather.objects.create(
-                    self.build_model(weather_data, city, alpha2code)
-                )
+                weather = self.build_model(weather_data, city)  # type: ignore
 
-        return weather
+        return weather  # type: ignore
 
-    def build_model(self, weather: WeatherInfoDTO, city_name: str, alpha2code: str) -> Weather:
+    def build_model(self, weather: WeatherInfoDTO, city_name: str) -> Weather:
         """
         Формирование объекта модели погоды.
 
@@ -42,10 +42,8 @@ class WeatherService:
         :param str alpha2code: ISO Alpha2 код страны
         :return:
         """
-        city = City.objects.filter(
-            Q(name__contains=city_name) | Q(country__alpha2code__contains=alpha2code)
-        )
-        return Weather(
+        city = CityService().get_cities(city_name)[:1][0]
+        weather_object = Weather.objects.create(
             city=city,
             temp=weather.temp,
             pressure=weather.pressure,
@@ -56,3 +54,4 @@ class WeatherService:
             dt=weather.dt,
             timezone=weather.timezone,
         )
+        return weather_object

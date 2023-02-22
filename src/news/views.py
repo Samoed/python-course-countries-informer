@@ -5,10 +5,14 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
+from rest_framework.settings import api_settings
 
 from app.settings import CACHE_WEATHER
 from news.serializers import NewsSerializer
 from news.services.news import NewsService
+
+pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
+paginator = pagination_class()
 
 
 @api_view(["GET"])
@@ -29,7 +33,9 @@ def get_news(request: Request, alpha2code: str) -> JsonResponse:
             caches[CACHE_WEATHER].set(cache_key, data)
 
     if data:
-        serializer = NewsSerializer(data, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        page = paginator.paginate_queryset(data, request)
+        serializer = NewsSerializer(page, many=True)
+
+        return paginator.get_paginated_response(serializer.data)
 
     raise NotFound

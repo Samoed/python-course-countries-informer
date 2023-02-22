@@ -12,6 +12,7 @@ class GeoClient(BaseClient):
     """
     Реализация функций для взаимодействия с внешним сервисом-провайдером данных о странах и городах.
     """
+
     headers = {"apikey": API_KEY_APILAYER}
 
     def get_base_url(self) -> str:

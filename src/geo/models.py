@@ -100,6 +100,7 @@ class City(TimeStampMixin):
 
 class Weather(TimeStampMixin):
     """Модель погоды"""
+
     city = models.ForeignKey(
         City,
         on_delete=models.PROTECT,
@@ -138,5 +139,7 @@ class CurrencyRates(TimeStampMixin):
         related_name="currency",
         verbose_name="Валюта",
     )
-    currency_name = models.CharField(verbose_name="Валюта для сравнения", max_length=255)
+    currency_name = models.CharField(
+        verbose_name="Валюта для сравнения", max_length=255
+    )
     rate = models.FloatField(verbose_name="Отношение валют")
