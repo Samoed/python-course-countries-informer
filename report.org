@@ -11,4 +11,4 @@
 * Получение новостей
 [[file:docs/img/get_news.png]]
 * Make all
-[[file:docs/img/make_all.png][file:docs/img/job_black.png]]
+[[file:docs/img/make_all.png]]
