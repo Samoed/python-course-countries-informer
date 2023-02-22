@@ -1,0 +1,14 @@
+#+title: Отчет
+
+* Полчение страны
+[[file:docs/img/get_country.png]]
+* Получение города
+[[file:docs/img/get_city.png]]
+* Получение валют
+[[file:docs/img/get_currency.png]]
+* Получение погоды
+[[file:docs/img/get_weather.png]]
+* Получение новостей
+[[file:docs/img/get_news.png]]
+* Make all
+[[file:docs/img/make_all.png][file:docs/img/job_black.png]]

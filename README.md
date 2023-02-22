@@ -32,21 +32,21 @@ git clone https://github.com/Samoed/python-course-countries-informer
     ```shell
     docker compose up
     ```
-   When containers are up server starts at [http://0.0.0.0:8000](http://0.0.0.0:8000). You can open it in your browser.
+   When containers are up server starts at [http://0.0.0.0:8020](http://0.0.0.0:8020). You can open it in your browser.
 
-4. To run application correctly set up the database using commands:
-    Connect to the application Docker-container:
+## Usage
+1. Run application:
+    ```shell
+    make run
+    ```
+2. Migrate database:
     ```shell
     make migrate
     ```
-## Usage
-1. For admin usage
+3. Create superuser:
     ```shell
     make create_super_user
     ```
-   Then admin panel will be at [http://0.0.0.0:8000/admin](http://0.0.0.0:8000/admin)
-2. Swagger documentation
-   When app running swagger will be at [http://0.0.0.0:8000/swagger](http://0.0.0.0:8000/swagger)
 
 ## Automation commands
 1. To run tests:
@@ -57,7 +57,7 @@ git clone https://github.com/Samoed/python-course-countries-informer
 
 ## Documentation
 1. Swagger documentation
-   When app running swagger will be at [http://0.0.0.0:8000/swagger](http://0.0.0.0:8000/swagger)
+   When app running swagger will be at [http://0.0.0.0:8020/swagger](http://0.0.0.0:8020/swagger)
 2. Documentation generation
     ```shell
     make docs-html
