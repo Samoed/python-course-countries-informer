@@ -1,6 +1,4 @@
-from typing import Optional
-
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 
 from geo.clients.currency import CurrencyClient
 from geo.clients.schemas import CurrencyRatesDTO
@@ -12,12 +10,12 @@ class CurrencyService:
     Сервис для работы с данными о валютах.
     """
 
-    def get_currency(self, currency_base: str) -> Optional[CurrencyRates]:
+    def get_currency(self, currency_base: str) -> QuerySet[CurrencyRates]:
         """
         Получение валюты по названию.
 
 
-        :type currency_base: название валюты
+        :param str currency_base: название валюты
         :return:
         """
 
@@ -26,19 +24,21 @@ class CurrencyService:
         )
         if not currency_rates:
             if currency_data := CurrencyClient().get_rates(currency_base):
-                model = self.build_model(currency_data)
                 currency = Currency.objects.create(
-                    base=model.base,
-                    date=model.date,
+                    base=currency_data.base,
+                    date=currency_data.date,
                 )
-                currency_rates = CurrencyRates.objects.bulk_create(  # type: ignore
+                CurrencyRates.objects.bulk_create(
                     [
                         self.build_model_rates(currency, name, rate)
                         for name, rate in currency_data.rates.items()
                     ],
                     batch_size=1000,
                 )
-        return currency_rates  # type: ignore
+                currency_rates = CurrencyRates.objects.filter(
+                    Q(currency__base__contains=currency.base)
+                )
+        return currency_rates
 
     def build_model_rates(
         self, currency: Currency, name: str, rate: float

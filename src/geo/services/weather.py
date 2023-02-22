@@ -1,6 +1,4 @@
-from typing import Optional
-
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 
 from geo.clients.schemas import WeatherInfoDTO
 from geo.clients.weather import WeatherClient
@@ -13,7 +11,7 @@ class WeatherService:
     Сервис для работы с данными о погоде.
     """
 
-    def get_weather(self, alpha2code: str, city: str) -> Optional[Weather]:
+    def get_weather(self, alpha2code: str, city: str) -> QuerySet[Weather]:
         """
         Получение погоды по стране и городу.
 
@@ -28,18 +26,18 @@ class WeatherService:
         )
         if not weather:
             if weather_data := WeatherClient().get_weather(f"{city},{alpha2code}"):
-                weather = self.build_model(weather_data, city)  # type: ignore
+                self.create_model(weather_data, city)
+                weather = Weather.objects.filter(Q(city__name__contains=city))
 
-        return weather  # type: ignore
+        return weather
 
-    def build_model(self, weather: WeatherInfoDTO, city_name: str) -> Weather:
+    def create_model(self, weather: WeatherInfoDTO, city_name: str) -> Weather:
         """
         Формирование объекта модели погоды.
 
 
         :param WeatherInfoDTO weather: Данные о погоде.
         :param str city_name: Город
-        :param str alpha2code: ISO Alpha2 код страны
         :return:
         """
         city = CityService().get_cities(city_name)[:1][0]
