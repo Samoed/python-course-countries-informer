@@ -145,6 +145,12 @@ def get_weather(request: Request, alpha2code: str, city: str) -> JsonResponse:
 
 @api_view(["GET"])
 def get_currency(request: Request, currency_base: str) -> JsonResponse:
+    """
+    Получение информации о курсе валюты.
+
+    :param Request request: Объект запроса
+    :param currency_base: Название валюты
+    """
     cache_key = f"currency_base_{currency_base}"
     data = caches[CACHE_WEATHER].get(cache_key)
     if not data:

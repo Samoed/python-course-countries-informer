@@ -8,8 +8,15 @@ from news.models import News
 
 
 class NewsTestCase(APITestCase):
+    """
+    Тесты для новостей.
+    """
 
     def setUp(self) -> None:
+        """
+        Подготовка данных для тестов.
+        :return:
+        """
         country = Country.objects.create(
             name="test",
             alpha2code="te",
@@ -47,6 +54,10 @@ class NewsTestCase(APITestCase):
         )
 
     def test_get_news(self):
+        """
+        Тест получения новостей.
+        :return:
+        """
         response = self.client.get(reverse("news", kwargs={"alpha2code": "te"}))
         data = response.json()
         item = data[0]

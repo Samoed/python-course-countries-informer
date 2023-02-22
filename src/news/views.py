@@ -14,13 +14,11 @@ from news.services.news import NewsService
 @api_view(["GET"])
 def get_news(request: Request, alpha2code: str) -> JsonResponse:
     """
-    Получить информацию о городах по названию.
+    Получение новостной ленты для указанной страны.
 
-    Сначала метод ищет данные в БД. Если данные не найдены, то делается запрос к API.
-    После получения данных от API они сохраняются в БД.
 
     :param Request request: Объект запроса
-    :param str alpha2code: Название города
+    :param str alpha2code: Название страны
     :return:
     """
 

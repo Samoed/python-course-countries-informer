@@ -50,6 +50,9 @@ class CitySerializer(serializers.ModelSerializer):
 
 
 class WeatherSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для данных о погоде.
+    """
     city = CitySerializer(read_only=True)
 
     class Meta:
@@ -69,6 +72,9 @@ class WeatherSerializer(serializers.ModelSerializer):
 
 
 class CurrencySerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для данных о валюте.
+    """
     class Meta:
         model = Currency
         fields = [
@@ -79,6 +85,9 @@ class CurrencySerializer(serializers.ModelSerializer):
 
 
 class CurrencyRatesSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для данных о курсе валют.
+    """
     currency = CurrencySerializer(read_only=True)
 
     class Meta:

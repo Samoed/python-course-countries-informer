@@ -20,15 +20,6 @@ class NewsClient(BaseClient):
     def get_base_url(self) -> str:
         return "https://newsapi.org/v2"
 
-    def _request(self, endpoint: str) -> Optional[dict]:
-        with httpx.Client(timeout=REQUESTS_TIMEOUT) as client:
-            # получение ответа
-            response = client.get(endpoint)
-            if response.status_code == HTTPStatus.OK:
-                return response.json()
-
-            return None
-
     def get_news(self, alpha2code: str) -> Optional[list[NewsItemDTO]]:
         """
         Получение новостной ленты для указанной страны.

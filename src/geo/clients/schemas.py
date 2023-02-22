@@ -179,6 +179,9 @@ class WeatherInfoDTO(BaseModel):
             humidity=54,
             wind_speed=4.63,
             description="scattered clouds",
+            visibility=10000,
+            dt=datetime.datetime(2021, 9, 14, 12, 0),
+            timezone=7200,
         )
     """
 

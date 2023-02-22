@@ -7,15 +7,14 @@ from geo.clients.schemas import CountryDTO, CurrencyRatesDTO
 from geo.models import Currency, CurrencyRates
 
 
-# todo change comments
 class CurrencyService:
     """
-    Сервис для работы с данными о погоде.
+    Сервис для работы с данными о валютах.
     """
 
     def get_currency(self, currency_base: str) -> Optional[CurrencyRates]:
         """
-        Получение списка стран по названию.
+        Получение валюты по названию.
 
 
         :type currency_base: название валюты
@@ -36,21 +35,29 @@ class CurrencyService:
         return currency_rates
 
     def build_model_rates(self, currency: Currency, name: str, rate: float) -> CurrencyRates:
+        """
+        Формирование объекта модели значения отношений валют.
+
+        :param Currency currency: Валюта
+        :param str name: называние валюты
+        :param float rate: отношение валют
+        :return:
+        """
         return CurrencyRates(
             currency=currency,
             currency_name=name,
             rate=rate,
         )
 
-    def build_model(self, country: CurrencyRatesDTO) -> Currency:
+    def build_model(self, currency: CurrencyRatesDTO) -> Currency:
         """
-        Формирование объекта модели страны.
+        Формирование объекта модели валюты.
 
-        :param CountryDTO country: Данные о стране.
+        :param CurrencyRatesDTO currency: Данные о валюте.
         :return:
         """
 
         return Currency(
-            base=country.base,
-            date=country.date,
+            base=currency.base,
+            date=currency.date,
         )

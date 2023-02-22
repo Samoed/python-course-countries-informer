@@ -14,7 +14,7 @@ class WeatherService:
 
     def get_weather(self, alpha2code: str, city: str) -> Optional[dict]:
         """
-        Получение списка стран по названию.
+        Получение погоды по стране и городу.
 
         :param alpha2code: ISO Alpha2 код страны
         :param city: Город
@@ -34,12 +34,14 @@ class WeatherService:
 
     def build_model(self, weather: WeatherInfoDTO, city_name: str, alpha2code: str) -> Weather:
         """
-        Формирование объекта модели страны.
+        Формирование объекта модели погоды.
 
-        :param CountryDTO country: Данные о стране.
+
+        :param WeatherInfoDTO weather: Данные о погоде.
+        :param str city_name: Город
+        :param str alpha2code: ISO Alpha2 код страны
         :return:
         """
-        print(city_name, alpha2code)
         city = City.objects.filter(
             Q(name__contains=city_name) | Q(country__alpha2code__contains=alpha2code)
         )

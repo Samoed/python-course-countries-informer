@@ -26,7 +26,7 @@ db:
 up:
 	docker compose up --build -d
 
-migrate:
+migrate: db
 	docker compose run countries-informer-app python manage.py migrate
 
 makemigrations:

@@ -99,6 +99,7 @@ class City(TimeStampMixin):
 
 
 class Weather(TimeStampMixin):
+    """Модель погоды"""
     city = models.ForeignKey(
         City,
         on_delete=models.PROTECT,

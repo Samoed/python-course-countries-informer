@@ -6,7 +6,7 @@ from news.models import News
 
 class NewsSerializer(serializers.ModelSerializer):
     """
-    Сериализатор для данных о стране.
+    Сериализатор для данных о новостях.
     """
 
     country = CountrySerializer(read_only=True)
