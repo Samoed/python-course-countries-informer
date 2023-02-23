@@ -20,5 +20,20 @@ lint:
 test:
 	docker compose run countries-informer-app ./manage.py test
 
+db:
+	docker compose up countries-informer-db -d
+
+up:
+	docker compose up --build -d
+
+migrate: db
+	docker compose run countries-informer-app python manage.py migrate
+
+makemigrations:
+	docker compose run countries-informer-app python manage.py makemigrations
+
+create_super_user:
+	docker compose run countries-informer-app python manage.py createsuperuser
+
 # запуск всех функций поддержки качества кода
 all: format lint test

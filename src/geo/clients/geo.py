@@ -1,14 +1,11 @@
 """
 Функции для взаимодействия с внешним сервисом-провайдером данных о странах.
 """
-from http import HTTPStatus
 from typing import Optional
 
-import httpx
-
-from app.settings import API_KEY_APILAYER, REQUESTS_TIMEOUT
+from app.settings import API_KEY_APILAYER
 from base.clients.base import BaseClient
-from geo.clients.shemas import CountryDTO, CurrencyInfoDTO, CityDTO, CountryShortDTO
+from geo.clients.schemas import CityDTO, CountryDTO, CountryShortDTO, CurrencyInfoDTO
 
 
 class GeoClient(BaseClient):
@@ -16,19 +13,10 @@ class GeoClient(BaseClient):
     Реализация функций для взаимодействия с внешним сервисом-провайдером данных о странах и городах.
     """
 
+    headers = {"apikey": API_KEY_APILAYER}
+
     def get_base_url(self) -> str:
         return "https://api.apilayer.com/geo"
-
-    def _request(self, endpoint: str) -> Optional[dict]:
-        with httpx.Client(timeout=REQUESTS_TIMEOUT) as client:
-            # формирование заголовков запроса
-            headers = {"apikey": API_KEY_APILAYER}
-            # получение ответа
-            response = client.get(endpoint, headers=headers)
-            if response.status_code == HTTPStatus.OK:
-                return response.json()
-
-            return None
 
     def get_countries(self, name: str) -> Optional[list[CountryDTO]]:
         """
