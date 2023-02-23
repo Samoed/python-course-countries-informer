@@ -7,7 +7,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
 from rest_framework.settings import api_settings
 
-from app.settings import CACHE_WEATHER
+from app.settings import CACHE_NEWS
 from news.serializers import NewsSerializer
 from news.services.news import NewsService
 
@@ -27,10 +27,10 @@ def get_news(request: Request, alpha2code: str) -> JsonResponse:
     """
 
     cache_key = f"{alpha2code}_news"
-    data = caches[CACHE_WEATHER].get(cache_key)
+    data = caches[CACHE_NEWS].get(cache_key)
     if not data:
         if data := NewsService().get_news(alpha2code):
-            caches[CACHE_WEATHER].set(cache_key, data)
+            caches[CACHE_NEWS].set(cache_key, data)
 
     if data:
         page = paginator.paginate_queryset(data, request)

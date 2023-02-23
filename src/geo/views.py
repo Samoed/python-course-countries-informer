@@ -8,7 +8,7 @@ from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.request import Request
 from rest_framework.settings import api_settings
 
-from app.settings import CACHE_WEATHER
+from app.settings import CACHE_WEATHER, CACHE_CURRENCY
 from geo.serializers import (
     CountrySerializer,
     CitySerializer,
@@ -167,10 +167,10 @@ def get_currency(request: Request, currency_base: str) -> JsonResponse:
     :param currency_base: Название валюты
     """
     cache_key = f"currency_base_{currency_base}"
-    data = caches[CACHE_WEATHER].get(cache_key)
+    data = caches[CACHE_CURRENCY].get(cache_key)
     if not data:
         if data := CurrencyService().get_currency(currency_base):
-            caches[CACHE_WEATHER].set(cache_key, data)
+            caches[CACHE_CURRENCY].set(cache_key, data)
 
     if data:
         page = paginator.paginate_queryset(data, request)
